@@ -1,11 +1,21 @@
 // src/App.tsx
-function App() {
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './components/layout/Layout';
+import UploadPage from './pages/UploadPage';
+import HistoryPage from './pages/HistoryPage';
+
+const App: React.FC = () => {
   return (
-    <div style={{ padding: '24px' }}>
-      <h1>Проект успешно инициализирован!</h1>
-      <p>Сейчас настроим роутинг...</p>
-    </div>
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<UploadPage />} />
+          <Route path="/history" element={<HistoryPage />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
