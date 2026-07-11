@@ -1,32 +1,129 @@
-# React + TypeScript + Vite
+# AI-агент проверки целевого использования льготных кредитов (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Веб-приложение для автоматизации проверки документов, планируемых к заявлению в банк для оплаты за счёт средств льготного кредита.
 
-Currently, two official plugins are available:
+## Стек технологий
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + TypeScript
+- Vite 8
+- React Router DOM
+- Axios
+- React Dropzone
+- FastAPI Mock API (локально)
 
-## React Compiler
+## Запуск проекта
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Предварительные требования
 
-## Expanding the Oxlint configuration
+1. Node.js 20+
+2. Docker и Docker Compose (для контейнеризации)
+3. Mock API должен быть запущен локально на `http://localhost:8000`
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+### Запуск Mock API
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```
+# Клонируйте репозиторий Mock API
+git clone https://gitverse.ru/semao0/mock_api_credit.git
+cd mock_api_credit
+
+#Клонировать и зайти в проект фронтенда 
+`git clone https://github.com/tatakuznec777-spec/credit_check_frontend.git && cd credit_check_frontend`
+
+# Запуск через Docker
+docker compose up --build
+
+Открой http://localhost:5173 в браузере
+
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Документация API: `http://localhost:8000/docs`
+
+## Запуск Frontend
+
+### 1. Установка зависимостей
+
+`npm install`
+
+### 2. Запуск в режиме разработки
+
+`npm run dev`
+
+или
+
+`npm run dev -- --host`
+
+### 3. Открыть в браузере
+
+`http://localhost:5173`
+
+## Запуск через Docker Compose
+
+`docker compose up --build`
+
+Приложение будет доступно по адресу: `http://localhost:3000`
+
+## Функциональность
+
+### Загрузка документов
+
+- Drag & Drop зона для файлов (PDF, DOCX, JPG, PNG)
+
+- Выбор льготной программы (Федеральная / Областная)
+
+- Валидация файлов и программы перед отправкой
+
+### Проверка документов
+
+- Отображение статуса проверки в реальном времени
+
+- Цветовая индикация результата (зелёный / красный / жёлтый)
+
+### Детализация ошибок и предупреждений
+
+- Извлечённые данные (контрагент, сумма, дата, предмет оплаты)
+
+- Скачивание отчёта в формате JSON
+
+### История проверок
+
+- Таблица с датой, программой, количеством документов и статусом
+
+### Фильтрация по статусу
+
+- Клик по строке для просмотра деталей
+
+## Структура проекта
+
+```
+src/
+├── api/              # API клиент и типы
+├── components/
+│   ├── layout/       # Layout и навигация
+│   ├── upload/       # Компоненты загрузки
+│   ├── result/       # Карточка результата
+│   └── history/      # Таблица истории
+├── pages/            # Страницы приложения
+├── types/            # TypeScript типы
+└── utils/            # Вспомогательные функции
+
+```
+
+## Тестирование
+
+_Для получения разных статусов проверки называйте файлы с ключевыми словами:_
+
+договор.pdf — обязательный документ
+
+счёт.pdf — счёт на оплату
+
+спецификация.pdf — спецификация
+
+акт.pdf — акт выполненных работ
+
+_Примеры:_
+
+- Все документы присутствуют → статус "approve" (зелёный)
+
+- Отсутствуют документы → статус "reject" (красный)
+
+- Есть предупреждения → статус "manual" (жёлтый)

@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: .
+    ports:
+      - "3000:80"
+    depends_on:
+      - mock-api
+    environment:
+      - VITE_API_URL=http://mock-api:8000
+
+  mock-api:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./mock_api_credit:/app
+    ports:
+      - "8000:8000"
+    command: >
+      bash -c "pip install -r requirements.txt && uvicorn app.main:app --host 0.0.0.0 --port 8000"
